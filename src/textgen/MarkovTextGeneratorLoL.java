@@ -1,9 +1,6 @@
 package textgen;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Random;
+import java.util.* ;
 
 /** 
  * An implementation of the MTG interface that uses a list of lists.
@@ -28,11 +25,23 @@ public class MarkovTextGeneratorLoL implements MarkovTextGenerator {
 	}
 	
 	
-	/** Train the generator by adding the sourceText */
+	/** Train the generator by adding the sourceText
+	 * @return*/
 	@Override
-	public void train(String sourceText)
+	public Object train(String sourceText)
 	{
-		// TODO: Implement this method
+		if (!wordList.isEmpty()) { return; }
+
+		String[] allWords = sourceText.split("[\\s]+"); // Is .split("\\s+") also okay?
+
+
+		starter = allWords[0];
+		String prevWord = starter;
+
+		for (int i = 1; i < allWords.length; i++) {
+			ListNode getNode = findListNodeByWord(prevWord);
+			getNode.addNextWord(allWords[i]);
+			prevWord = allWords[i];
 	}
 	
 	/** 
@@ -61,10 +70,24 @@ public class MarkovTextGeneratorLoL implements MarkovTextGenerator {
 	@Override
 	public void retrain(String sourceText)
 	{
-		// TODO: Implement this method.
+		wordList.clear();
+		train(sourceText);
 	}
 	
 	// TODO: Add any private helper methods you need here.
+	private ListNode findListNodeByWord(String word)
+	{
+		// is checking for a wordList of null necessary??
+		for (ListNode node : wordList) {
+			if (node.getWord().equals(word)) {
+				return node;
+			}
+		}
+		ListNode node = new ListNode(word);
+		wordList.add(node);
+		return node;
+	}
+
 	
 	
 	/**
